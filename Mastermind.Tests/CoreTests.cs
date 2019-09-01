@@ -2,7 +2,7 @@ using Xunit;
 
 namespace Mastermind.Tests
 {
-    public class Tests
+    public class CoreTests
     {
         [Fact]
         public void Evaluate_ShouldReturnNoWellPlacedOrMisplacedColours_WhenNoCorrectColoursAreGuessed()
