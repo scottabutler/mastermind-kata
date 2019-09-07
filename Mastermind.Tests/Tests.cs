@@ -94,7 +94,7 @@ namespace Mastermind.Tests
         }
 
         [Fact]
-        public void Evaluate_ShouldReturnTwoMisplacedColour_WhenThatColourOccursOnceInTheSecret_AndItIsGuessedTwice()
+        public void Evaluate_ShouldReturnOneMisplacedColour_WhenThatColourOccursOnceInTheSecret_AndItIsGuessedTwice()
         {
             //Arrange
             var secret = new Colours[] { Colours.Pink, Colours.Red, Colours.Orange, Colours.Green };
@@ -105,7 +105,7 @@ namespace Mastermind.Tests
 
             //Assert
             Assert.Equal(0, result.WellPlaced);
-            Assert.Equal(2, result.Misplaced);
+            Assert.Equal(1, result.Misplaced);
         }
 
         [Fact]
