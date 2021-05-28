@@ -9,11 +9,12 @@ namespace Mastermind.ConsoleApp
         {
             Console.WriteLine("Hello World!");
 
-            var secret = new List<char>{'a', 'b', 'c', 'd'};
-            Console.WriteLine(Core.Eval(secret: secret, new List<char>{'a', 'b', 'c', 'd'}).AsString());
-            Console.WriteLine(Core.Eval(secret: secret, new List<char>{'b', 'b', 'c', 'd'}).AsString());
-            Console.WriteLine(Core.Eval(secret: secret, new List<char>{'b', 'a', 'c', 'd'}).AsString());
-            Console.WriteLine(Core.Eval(secret: new List<char>{'b', 'b', 'c', 'd'}, new List<char>{'a', 'c', 'b', 'd'}).AsString());
+            var secret = new List<Colours>{Colours.Blue, Colours.Green, Colours.Red, Colours.Orange};
+            Console.WriteLine(Core.Eval(secret: secret, new List<Colours>{Colours.Blue, Colours.Green, Colours.Red, Colours.Orange}).AsString());
+            Console.WriteLine(Core.Eval(secret: secret, new List<Colours>{Colours.Green, Colours.Yellow, Colours.Green, Colours.Yellow}).AsString());
+            Console.WriteLine(Core.Eval(secret: secret, new List<Colours>{Colours.Green, Colours.Green, Colours.Red, Colours.Orange}).AsString());
+            Console.WriteLine(Core.Eval(secret: secret, new List<Colours>{Colours.Green, Colours.Blue, Colours.Red, Colours.Orange}).AsString());
+            Console.WriteLine(Core.Eval(secret: new List<Colours>{Colours.Green, Colours.Green, Colours.Red, Colours.Orange}, new List<Colours>{Colours.Blue, Colours.Red, Colours.Green, Colours.Orange}).AsString());
         }
     }
 }

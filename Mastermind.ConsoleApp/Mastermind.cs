@@ -6,7 +6,7 @@ namespace Mastermind
 {
     public static class Core
     {
-        public static GuessResult Eval(List<char> secret, List<char> guess)
+        public static GuessResult Eval(List<Colours> secret, List<Colours> guess)
         {
             if (secret == guess)
             {
@@ -15,10 +15,9 @@ namespace Mastermind
 
             var wellPlacedCount = 0;
             var misplacedCount = 0;
-            var wellPlacedIndexes = new List<int>();
 
-            var newGuess = new List<char>();
-            var newSecret = new List<char>();
+            var newGuess = new List<Colours>();
+            var newSecret = new List<Colours>();
 
             // Identify well placed indexes
             for (var i = 0; i < guess.Count(); i++)
@@ -26,7 +25,6 @@ namespace Mastermind
                 if (guess[i] == secret[i])
                 {
                     wellPlacedCount++;
-                    wellPlacedIndexes.Add(i);
                 }
                 else
                 {
