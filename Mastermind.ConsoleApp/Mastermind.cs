@@ -19,7 +19,7 @@ namespace Mastermind
             var newGuess = new List<Colours>();
             var newSecret = new List<Colours>();
 
-            // Identify well placed indexes
+            // Identify well placed indexes, removing them from the guess and secret if they match
             for (var i = 0; i < guess.Count(); i++)
             {
                 if (guess[i] == secret[i])
@@ -34,13 +34,32 @@ namespace Mastermind
             }
 
             // Identify misplaced indexes
-            for (var i = 0; i < newGuess.Count(); i++)
+            foreach (var s in newSecret)
             {
-                if (newSecret.Contains(newGuess[i]))
+                if (newGuess.Contains(s))
                 {
                     misplacedCount++;
+                    newGuess.RemoveAt(newGuess.IndexOf(s));
                 }
             }
+
+
+            // Identify misplaced indexes
+            // foreach (var g in newGuess.Distinct())
+            // {
+            //     if (newSecret.Contains(g))
+            //     {
+            //         // if once in secret and twice in guess, only add one
+            //         // if twice in secret and once in guess, only add one
+            //         // if twice in secret and twice in guess, add two
+            //         var occurrencesInSecret = newSecret.Count(x => x == g);
+            //         misplacedCount += occurrencesInSecret;
+            //     }
+            // }
+            // for (var i = 0; i < newGuess.Count(); i++)
+            // {
+
+            // }
 
             return new GuessResult(wellPlaced: wellPlacedCount, misplaced: misplacedCount);
         }
@@ -57,7 +76,7 @@ namespace Mastermind
             var secretCountPerColour = BuildColourDictionary((x) => secret.Count(s => s == x));
 
             //Work out how many of each colour is well placed
-            for (var a = 0; a < guess.Length; a ++)
+            for (var a = 0; a < guess.Length; a++)
             {
                 if (secret[a] == guess[a])
                 {
