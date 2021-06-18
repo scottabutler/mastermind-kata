@@ -25,6 +25,7 @@ namespace Mastermind.ConsoleApp
             var input = string.Empty;
             do
             {
+                Console.Write("Guess: ");
                 input = Console.ReadLine();
 
                 if (input.ToLower() == "q")
@@ -54,10 +55,11 @@ namespace Mastermind.ConsoleApp
 
                 var result = Core.Eval(secret: secret, guess: guess);
                 Console.WriteLine(result.AsString());
+                Console.WriteLine();
 
                 if (result.WellPlaced == 4)
                 {
-                    Console.WriteLine("You win! Secret was " + Print(secret));
+                    Console.WriteLine("You win! The secret was " + Print(secret));
                     break;
                 }
             } while (input.ToLower() != "q");
@@ -86,7 +88,7 @@ namespace Mastermind.ConsoleApp
 
         private static string Print(List<Colours> input)
         {
-            return string.Join(',', input.Select(x => x.ToString()));
+            return string.Join(", ", input.Select(x => x.ToString()));
         }
     }
 }
