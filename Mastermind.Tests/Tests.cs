@@ -1,6 +1,7 @@
 using Xunit;
 using System.Collections.Generic;
 using System.Linq;
+using Mastermind.Core;
 
 namespace Mastermind.Tests
 {
@@ -14,7 +15,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Blue, Colours.Yellow, Colours.Yellow, Colours.Blue };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(0, result.WellPlaced);
@@ -29,7 +30,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Blue, Colours.Pink, Colours.Yellow, Colours.Blue };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(0, result.WellPlaced);
@@ -44,7 +45,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Red, Colours.Orange, Colours.Green, Colours.Pink };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(0, result.WellPlaced);
@@ -59,7 +60,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Blue, Colours.Red, Colours.Yellow, Colours.Blue };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(1, result.WellPlaced);
@@ -73,7 +74,7 @@ namespace Mastermind.Tests
             var secret = new List<Colours> { Colours.Pink, Colours.Red, Colours.Orange, Colours.Green };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, new List<Colours> { Colours.Pink, Colours.Red, Colours.Orange, Colours.Green });
+            GuessResult result = App.Eval(secret, new List<Colours> { Colours.Pink, Colours.Red, Colours.Orange, Colours.Green });
 
             //Assert
             Assert.Equal(4, result.WellPlaced);
@@ -88,7 +89,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Blue, Colours.Yellow, Colours.Pink, Colours.Blue };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(0, result.WellPlaced);
@@ -103,7 +104,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Blue, Colours.Pink, Colours.Pink, Colours.Blue };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(0, result.WellPlaced);
@@ -118,7 +119,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Pink, Colours.Red, Colours.Green, Colours.Orange };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(2, result.WellPlaced);
@@ -133,7 +134,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Pink, Colours.Pink, Colours.Yellow, Colours.Blue };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(1, result.WellPlaced);
@@ -148,7 +149,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Red, Colours.Red, Colours.Red, Colours.Green };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(2, result.WellPlaced);
@@ -163,7 +164,7 @@ namespace Mastermind.Tests
             var input = new List<Colours> { Colours.Red, Colours.Yellow, Colours.Red, Colours.Green, Colours.Orange, Colours.Blue, Colours.Blue };
 
             //Act
-            GuessResult result = Mastermind.Core.Eval(secret, input);
+            GuessResult result = App.Eval(secret, input);
 
             //Assert
             Assert.Equal(1, result.WellPlaced);
@@ -179,7 +180,7 @@ namespace Mastermind.Tests
         [InlineData("RRGR", "RRGR", 4, 0)]
         public void Evaluate_ShouldPassTestCases(string secret, string input, int expectedWellPlaced, int expectedMisplaced)
         {
-            GuessResult result = Mastermind.Core.Eval(StringToColours(secret), StringToColours(input));
+            GuessResult result = App.Eval(StringToColours(secret), StringToColours(input));
 
             //Assert
             Assert.Equal(expectedWellPlaced, result.WellPlaced);

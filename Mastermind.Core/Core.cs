@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mastermind
+namespace Mastermind.Core
 {
-    public static class Core
+    public static class App
     {
         public static GuessResult Eval(List<Colours> secret, List<Colours> guess)
         {

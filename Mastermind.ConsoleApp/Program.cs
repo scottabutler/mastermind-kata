@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mastermind.Core;
 
 namespace Mastermind.ConsoleApp
 {
@@ -53,7 +54,7 @@ namespace Mastermind.ConsoleApp
                     guess.Add(MapToColour(c.ToString()));
                 }
 
-                var result = Core.Eval(secret: secret, guess: guess);
+                var result = Core.App.Eval(secret: secret, guess: guess);
                 Console.WriteLine(result.AsString());
                 Console.WriteLine();
 
