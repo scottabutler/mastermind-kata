@@ -6,6 +6,18 @@ namespace Mastermind.Core
 {
     public static class App
     {
+        public static List<Colours> GenerateSecret()
+        {
+            var secret = new List<Colours>();
+            Random r = new Random();
+            for (var i = 0; i < 4; i++)
+            {
+                int random = r.Next(0, 5);
+                secret.Add((Colours)random);
+            }
+            return secret;
+        }
+
         public static GuessResult Eval(List<Colours> secret, List<Colours> guess)
         {
             if (secret == guess)

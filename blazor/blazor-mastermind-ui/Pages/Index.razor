@@ -1,6 +1,88 @@
 ﻿@page "/"
+@using Mastermind.Core;
 
 <h1>Mastermind!</h1>
 
 Let's play Mastermind!
 
+<hr>
+Secret: <input type="text" name="secretInput" value="@secret.Print()" />
+<br />
+Guess: <input type="text" name="guessInput2" @onchange="@onChange" />
+<br />
+@guessInput
+
+@code {
+    private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
+    private string result;
+    private string guessInput;
+
+    private void UpdateGuess(string input)
+    {
+        guessInput = input;
+    }
+
+    private void onChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        value = (string)args.Value;
+    }
+
+    private void SubmitGuess()
+    {
+        var guess = new List<Colours>();
+        var allowedInputs = new List<string> { "b", "g", "r", "o", "y", "p" };
+        foreach (char c in guessInput)
+        {
+            if (!allowedInputs.Contains(c.ToString().ToLower()))
+            {
+                Console.WriteLine("Invalid input, only the following are characters are allowed: b, g, r, o, y, p");
+                break;
+            }
+
+            guess.Add(MapToColour(c.ToString()));
+        }
+
+        result = Mastermind.Core.App.Eval(secret, guess).AsString();
+    }
+
+    private static Colours MapToColour(string input)
+    {
+        switch (input.ToLower())
+        {
+            case "r":
+                return Colours.Red;
+            case "p":
+                return Colours.Pink;
+            case "b":
+                return Colours.Blue;
+            case "g":
+                return Colours.Green;
+            case "o":
+                return Colours.Orange;
+            case "y":
+                return Colours.Yellow;
+            default:
+                throw new Exception("Unsupported colour: " + input);
+        }
+    }
+}
+
+<button class="btn btn-primary" @onclick="SubmitGuess">Click me</button>
+
+<br /><br />
+<hr>
+
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
