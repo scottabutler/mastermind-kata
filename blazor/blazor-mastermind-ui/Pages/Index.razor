@@ -2,47 +2,63 @@
 @using Mastermind.Core;
 
 <h1>Mastermind!</h1>
+<br />
 
-Let's play Mastermind!
+@if (!String.IsNullOrWhiteSpace(Error))
+{
+    <div class="error">@Error</div>
+}
 
-<hr>
 Secret: <input type="text" name="secretInput" value="@secret.Print()" />
-<br />
-Guess: <input type="text" name="guessInput2" @onchange="@onChange" />
-<br />
-@guessInput
+<br /><br />
+Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
+<br /><br />
+Result: @Result
+<br /><br />
+
+<button class="btn btn-primary" @onclick="SubmitGuess">Submit</button>
+
+<br /><br />
+
+<div>
+    <div class="square red"></div>
+    <div class="square red"></div>
+    <div class="square red"></div>
+    <div class="square red"></div>
+</div>
 
 @code {
     private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
-    private string result;
-    private string guessInput;
+    public string Result { get; set; } = string.Empty;
 
-    private void UpdateGuess(string input)
-    {
-        guessInput = input;
-    }
+    public string GuessInput { get; set; } = string.Empty;
+    public string Error { get; set; } = string.Empty;
 
-    private void onChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
-    {
-        value = (string)args.Value;
+
+
+    class SubmittedGuess {
+        public List<Colours> Guess { get; set; }
+        public string Result { get; set; }
     }
 
     private void SubmitGuess()
     {
+        Error = string.Empty;
+
         var guess = new List<Colours>();
         var allowedInputs = new List<string> { "b", "g", "r", "o", "y", "p" };
-        foreach (char c in guessInput)
+        foreach (char c in GuessInput)
         {
             if (!allowedInputs.Contains(c.ToString().ToLower()))
             {
-                Console.WriteLine("Invalid input, only the following are characters are allowed: b, g, r, o, y, p");
+                Error = "Invalid input, only the following are characters are allowed: b, g, r, o, y, p";
                 break;
             }
 
             guess.Add(MapToColour(c.ToString()));
         }
 
-        result = Mastermind.Core.App.Eval(secret, guess).AsString();
+        Result = Mastermind.Core.App.Eval(secret, guess).AsString();
     }
 
     private static Colours MapToColour(string input)
@@ -67,22 +83,26 @@ Guess: <input type="text" name="guessInput2" @onchange="@onChange" />
     }
 }
 
-<button class="btn btn-primary" @onclick="SubmitGuess">Click me</button>
-
-<br /><br />
-<hr>
-
-<h1>Counter</h1>
-
-<p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
-@code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
-    {
-        currentCount++;
+<style type="text/css">
+    .error {
+        border: 1px solid red;
+        padding: 10px;
+        color: red;
+        background-color: #ffd6d6;
+        border-radius: 5px;
+        margin-bottom: 10px;
     }
-}
+    .square {
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+    .red { background-color: red; }
+    .orange { background-color: orange; }
+    .yellow { background-color: yellow; }
+    .green { background-color: green; }
+    .blue { background-color: blue; }
+    .pink { background-color: pink; }
+    .white { background-color: white; border: 1px solid #bbb; }
+</style>
