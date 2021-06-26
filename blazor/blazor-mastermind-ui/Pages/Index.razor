@@ -40,7 +40,9 @@
 </ol>
 
 Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
+<button class="btn btn-secondary" @onclick="Backspace">Del</button>
 <button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
+
 
 <hr />
 
@@ -73,6 +75,14 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         GuessInput += colour.ToLower()[0];
     }
 
+    private void Backspace()
+    {
+        if (GuessInput.Length > 0)
+        {
+            GuessInput = GuessInput.Substring(0, GuessInput.Length - 1);
+        }
+    }
+
     private void SubmitGuess()
     {
         Error = string.Empty;
@@ -91,9 +101,13 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         }
 
         var result = Mastermind.Core.App.Eval(secret, guess);
+
         SecretFound = result.WellPlaced == 4 && result.Misplaced == 0;
         Result = result.AsString();
+
         Guesses.Add(new SubmittedGuess { Guess = guess, Result = Result });
+
+        GuessInput = "";
     }
 
     private static Colours MapToColour(string input)
