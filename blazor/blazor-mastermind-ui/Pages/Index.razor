@@ -42,6 +42,18 @@
 Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
 <button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
 
+<hr />
+
+<div>
+    @foreach(Colours colour in Enum.GetValues(typeof(Colours)))
+    {
+        var col = colour.ToString().ToLower();
+        <div class="square-lg @col" @onclick="@(e => AddToGuess(col))">
+            @col.ToUpper()[0]
+        </div>
+    }
+</div>
+
 @code {
     private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
     public string Result { get; set; } = string.Empty;
@@ -54,6 +66,11 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
     public class SubmittedGuess {
         public List<Colours> Guess { get; set; }
         public string Result { get; set; }
+    }
+
+    private void AddToGuess(string colour)
+    {
+        GuessInput += colour.ToLower()[0];
     }
 
     private void SubmitGuess()
@@ -127,19 +144,28 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         padding-left: 10px;
         margin-left: 10px;
     }
+    .square, .square-lg {
+        border-radius: 5px;
+        display: inline-block;
+        vertical-align: middle;
+    }
     .square {
         width: 20px;
         height: 20px;
-        border-radius: 5px;
-        display: inline-block;
         margin-right: 5px;
+    }
+    .square-lg {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        text-align: center;
         vertical-align: middle;
+        color: white;
     }
     .red { background-color: #CC0000; }
     .orange { background-color: #FF6600; }
-    .yellow { background-color: #FFC300; }
+    .yellow { background-color: #FFC300; color: black; }
     .green { background-color: #009933; }
     .blue { background-color: #0066CC; }
     .pink { background-color: #CC3399; }
-    .white { background-color: white; border: 1px solid #bbb; }
 </style>
