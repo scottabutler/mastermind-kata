@@ -2,30 +2,30 @@
 @using Mastermind.Core;
 
 <h1>Mastermind!</h1>
-<br />
+<p>
+    Guess the secret colour combination that is made up of Blue, Green, Red, Orange, Yellow and Pink.
+    <br />There are 4 items in the secret and colours may appear more than once.
+</p>
+<p>
+    Enter a guess using the letters b, g, r, o, y, p.
+</p>
+
+<hr />
 
 @if (!String.IsNullOrWhiteSpace(Error))
 {
-    <div class="error">@Error</div>
+    <div class="error banner">@Error</div>
 }
 
 @if (SecretFound)
 {
-    <div class="success">You found the secret!</div>
+    <div class="success banner">You found the secret!</div>
 }
 
 @* Secret: <input type="text" name="secretInput" value="@secret.Print()" />
 <br /><br /> *@
-Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
-<br /><br />
-@* Result: @Result
-<br /><br /> *@
 
-<button class="btn btn-primary" @onclick="SubmitGuess" disabled="@SecretFound">Submit</button>
-
-<br /><br />
-
-<ul>
+<ol>
 @foreach (var g in Guesses)
 {
     <li>
@@ -37,7 +37,10 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         <div class="result">@g.Result</div>
     </li>
 }
-</ul>
+</ol>
+
+Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
+<button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
 
 @code {
     private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
@@ -46,8 +49,7 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
     public string GuessInput { get; set; } = string.Empty;
     public string Error { get; set; } = string.Empty;
     public bool SecretFound {get;set;} = false;
-
-    public List<SubmittedGuess> Guesses {get;set;} = new List<SubmittedGuess>();
+    public List<SubmittedGuess> Guesses { get; set; } = new List<SubmittedGuess>();
 
     public class SubmittedGuess {
         public List<Colours> Guess { get; set; }
@@ -64,7 +66,7 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         {
             if (!allowedInputs.Contains(c.ToString().ToLower()))
             {
-                Error = "Invalid input, only the following are characters are allowed: b, g, r, o, y, p";
+                Error = "Invalid input. Only the following are characters are allowed: b, g, r, o, y, p";
                 return;
             }
 
@@ -103,21 +105,21 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
     li {
         margin-bottom: 5px;
     }
-    .error {
-        border: 1px solid red;
+    .banner {
         padding: 10px;
-        color: red;
-        background-color: #ffd6d6;
         border-radius: 5px;
         margin-bottom: 10px;
+        max-width: 600px;
+    }
+    .error {
+        border: 1px solid red;
+        color: red;
+        background-color: #ffd6d6;
     }
     .success {
         border: 1px solid #009933;
-        padding: 10px;
         color: #009933;
         background-color: #CCFFCC;
-        border-radius: 5px;
-        margin-bottom: 10px;
     }
     .result {
         display: inline-block;
