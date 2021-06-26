@@ -9,23 +9,35 @@
     <div class="error">@Error</div>
 }
 
-Secret: <input type="text" name="secretInput" value="@secret.Print()" />
-<br /><br />
+@if (SecretFound)
+{
+    <div class="success">You found the secret!</div>
+}
+
+@* Secret: <input type="text" name="secretInput" value="@secret.Print()" />
+<br /><br /> *@
 Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
 <br /><br />
-Result: @Result
+@* Result: @Result
+<br /><br /> *@
+
+<button class="btn btn-primary" @onclick="SubmitGuess" disabled="@SecretFound">Submit</button>
+
 <br /><br />
 
-<button class="btn btn-primary" @onclick="SubmitGuess">Submit</button>
-
-<br /><br />
-
-<div>
-    <div class="square red"></div>
-    <div class="square red"></div>
-    <div class="square red"></div>
-    <div class="square red"></div>
-</div>
+<ul>
+@foreach (var g in Guesses)
+{
+    <li>
+        @foreach (var colour in g.Guess)
+        {
+            var col = colour.ToString().ToLower();
+            <div class="square @col"></div>
+        }
+        <div class="result">@g.Result</div>
+    </li>
+}
+</ul>
 
 @code {
     private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
@@ -33,10 +45,11 @@ Result: @Result
 
     public string GuessInput { get; set; } = string.Empty;
     public string Error { get; set; } = string.Empty;
+    public bool SecretFound {get;set;} = false;
 
+    public List<SubmittedGuess> Guesses {get;set;} = new List<SubmittedGuess>();
 
-
-    class SubmittedGuess {
+    public class SubmittedGuess {
         public List<Colours> Guess { get; set; }
         public string Result { get; set; }
     }
@@ -52,13 +65,16 @@ Result: @Result
             if (!allowedInputs.Contains(c.ToString().ToLower()))
             {
                 Error = "Invalid input, only the following are characters are allowed: b, g, r, o, y, p";
-                break;
+                return;
             }
 
             guess.Add(MapToColour(c.ToString()));
         }
 
-        Result = Mastermind.Core.App.Eval(secret, guess).AsString();
+        var result = Mastermind.Core.App.Eval(secret, guess);
+        SecretFound = result.WellPlaced == 4 && result.Misplaced == 0;
+        Result = result.AsString();
+        Guesses.Add(new SubmittedGuess { Guess = guess, Result = Result });
     }
 
     private static Colours MapToColour(string input)
@@ -84,6 +100,9 @@ Result: @Result
 }
 
 <style type="text/css">
+    li {
+        margin-bottom: 5px;
+    }
     .error {
         border: 1px solid red;
         padding: 10px;
@@ -92,17 +111,33 @@ Result: @Result
         border-radius: 5px;
         margin-bottom: 10px;
     }
+    .success {
+        border: 1px solid #009933;
+        padding: 10px;
+        color: #009933;
+        background-color: #CCFFCC;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .result {
+        display: inline-block;
+        border-left: 1px solid #ccc;
+        padding-left: 10px;
+        margin-left: 10px;
+    }
     .square {
         width: 20px;
         height: 20px;
         border-radius: 5px;
         display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
     }
-    .red { background-color: red; }
-    .orange { background-color: orange; }
-    .yellow { background-color: yellow; }
-    .green { background-color: green; }
-    .blue { background-color: blue; }
-    .pink { background-color: pink; }
+    .red { background-color: #CC0000; }
+    .orange { background-color: #FF6600; }
+    .yellow { background-color: #FFC300; }
+    .green { background-color: #009933; }
+    .blue { background-color: #0066CC; }
+    .pink { background-color: #CC3399; }
     .white { background-color: white; border: 1px solid #bbb; }
 </style>
