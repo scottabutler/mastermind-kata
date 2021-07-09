@@ -35,7 +35,7 @@
     @if (!String.IsNullOrWhiteSpace(Error))
     {
         <div class="row">
-            <div class="col-md-6 mt-2">
+            <div class="col-lg-6 mt-2">
                 <div class="error banner">@Error</div>
             </div>
         </div>
@@ -44,7 +44,7 @@
     @if (SecretFound)
     {
         <div class="row">
-            <div class="col-md-6 mt-2">
+            <div class="col-lg-6 mt-2">
                 <div class="success banner">
                     You found the secret!
                     <button class="btn btn-link" @onclick="Reset">
