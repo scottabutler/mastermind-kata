@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using Mastermind.Core;
 
 namespace Mastermind.ConsoleApp
 {
@@ -11,13 +11,7 @@ namespace Mastermind.ConsoleApp
             Console.WriteLine("Welcome to Mastermind!");
             Console.WriteLine("Generating secret...");
 
-            var secret = new List<Colours>();
-            Random r = new Random();
-            for (var i = 0; i < 4; i++)
-            {
-                int random = r.Next(0, 5);
-                secret.Add((Colours)random);
-            }
+            var secret = Core.App.GenerateSecret();
 
             Console.WriteLine("Enter guess or q to quit");
             // Console.WriteLine(Print(secret));
@@ -30,7 +24,7 @@ namespace Mastermind.ConsoleApp
 
                 if (input.ToLower() == "q")
                 {
-                    Console.WriteLine("Secret was: " + Print(secret));
+                    Console.WriteLine("Secret was: " + secret.Print());
                     continue;
                 }
 
@@ -53,13 +47,13 @@ namespace Mastermind.ConsoleApp
                     guess.Add(MapToColour(c.ToString()));
                 }
 
-                var result = Core.Eval(secret: secret, guess: guess);
+                var result = Core.App.Eval(secret: secret, guess: guess);
                 Console.WriteLine(result.AsString());
                 Console.WriteLine();
 
                 if (result.WellPlaced == 4)
                 {
-                    Console.WriteLine("You win! The secret was " + Print(secret));
+                    Console.WriteLine("You win! The secret was " + secret.Print());
                     break;
                 }
             } while (input.ToLower() != "q");
@@ -84,11 +78,6 @@ namespace Mastermind.ConsoleApp
                 default:
                     throw new Exception("Unsupported colour: " + input);
             }
-        }
-
-        private static string Print(List<Colours> input)
-        {
-            return string.Join(", ", input.Select(x => x.ToString()));
         }
     }
 }

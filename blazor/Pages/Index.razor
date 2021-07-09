@@ -1,0 +1,188 @@
+﻿@page "/"
+@using Mastermind.Core;
+
+<h1>Mastermind!</h1>
+<p>
+    Guess the secret colour combination that is made up of Blue, Green, Red, Orange, Yellow and Pink.
+    <br />There are 4 items in the secret and colours may appear more than once.
+</p>
+<p>
+    Enter a guess using the letters b, g, r, o, y, p.
+</p>
+
+<hr />
+
+@if (!String.IsNullOrWhiteSpace(Error))
+{
+    <div class="error banner">@Error</div>
+}
+
+@if (SecretFound)
+{
+    <div class="success banner">You found the secret!</div>
+}
+
+@* Secret: <input type="text" name="secretInput" value="@secret.Print()" />
+<br /><br /> *@
+
+<ol>
+@foreach (var g in Guesses)
+{
+    <li>
+        @foreach (var colour in g.Guess)
+        {
+            var col = colour.ToString().ToLower();
+            <div class="square @col"></div>
+        }
+        <div class="result">@g.Result</div>
+    </li>
+}
+</ol>
+
+Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
+<button class="btn btn-secondary" @onclick="Backspace">Del</button>
+<button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
+
+
+<hr />
+
+<div>
+    @foreach(Colours colour in Enum.GetValues(typeof(Colours)))
+    {
+        var col = colour.ToString().ToLower();
+        <div class="square-lg @col" @onclick="@(e => AddToGuess(col))">
+            @col.ToUpper()[0]
+        </div>
+    }
+</div>
+
+@code {
+    private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
+    public string Result { get; set; } = string.Empty;
+
+    public string GuessInput { get; set; } = string.Empty;
+    public string Error { get; set; } = string.Empty;
+    public bool SecretFound {get;set;} = false;
+    public List<SubmittedGuess> Guesses { get; set; } = new List<SubmittedGuess>();
+
+    public class SubmittedGuess {
+        public List<Colours> Guess { get; set; }
+        public string Result { get; set; }
+    }
+
+    private void AddToGuess(string colour)
+    {
+        GuessInput += colour.ToLower()[0];
+    }
+
+    private void Backspace()
+    {
+        if (GuessInput.Length > 0)
+        {
+            GuessInput = GuessInput.Substring(0, GuessInput.Length - 1);
+        }
+    }
+
+    private void SubmitGuess()
+    {
+        Error = string.Empty;
+
+        var guess = new List<Colours>();
+        var allowedInputs = new List<string> { "b", "g", "r", "o", "y", "p" };
+        foreach (char c in GuessInput)
+        {
+            if (!allowedInputs.Contains(c.ToString().ToLower()))
+            {
+                Error = "Invalid input. Only the following are characters are allowed: b, g, r, o, y, p";
+                return;
+            }
+
+            guess.Add(MapToColour(c.ToString()));
+        }
+
+        var result = Mastermind.Core.App.Eval(secret, guess);
+
+        SecretFound = result.WellPlaced == 4 && result.Misplaced == 0;
+        Result = result.AsString();
+
+        Guesses.Add(new SubmittedGuess { Guess = guess, Result = Result });
+
+        GuessInput = "";
+    }
+
+    private static Colours MapToColour(string input)
+    {
+        switch (input.ToLower())
+        {
+            case "r":
+                return Colours.Red;
+            case "p":
+                return Colours.Pink;
+            case "b":
+                return Colours.Blue;
+            case "g":
+                return Colours.Green;
+            case "o":
+                return Colours.Orange;
+            case "y":
+                return Colours.Yellow;
+            default:
+                throw new Exception("Unsupported colour: " + input);
+        }
+    }
+}
+
+<style type="text/css">
+    li {
+        margin-bottom: 5px;
+    }
+    .banner {
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        max-width: 600px;
+    }
+    .error {
+        border: 1px solid red;
+        color: red;
+        background-color: #ffd6d6;
+    }
+    .success {
+        border: 1px solid #009933;
+        color: #009933;
+        background-color: #CCFFCC;
+    }
+    .result {
+        display: inline-block;
+        border-left: 1px solid #ccc;
+        padding-left: 10px;
+        margin-left: 10px;
+    }
+    .square, .square-lg {
+        border-radius: 5px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .square {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+    .square-lg {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        line-height: 40px;
+        user-select: none;
+        text-align: center;
+        vertical-align: middle;
+        color: white;
+        cursor: pointer;
+    }
+    .red { background-color: #CC0000; }
+    .orange { background-color: #FF6600; }
+    .yellow { background-color: #FFC300; color: black; }
+    .green { background-color: #009933; }
+    .blue { background-color: #0066CC; }
+    .pink { background-color: #CC3399; }
+</style>
