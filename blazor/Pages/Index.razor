@@ -1,16 +1,23 @@
 ﻿@page "/"
 @using Mastermind.Core;
 
-<h1>Mastermind!</h1>
+<h1>Welcome</h1>
 <p>
     Guess the secret colour combination that is made up of Blue, Green, Red, Orange, Yellow and Pink.
-    <br />There are 4 items in the secret and colours may appear more than once.
+    <br />There are 4 coloured squares in the secret and colours may appear more than once.
 </p>
 <p>
-    Enter a guess using the letters b, g, r, o, y, p.
+    Each black square indicates a well placed square in the guess.
+    <br />Each white square indicates a misplaced square in the guess.
+</p>
+<p>
+    Enter a guess using the coloured buttons below.
 </p>
 
-<hr />
+@if (Guesses.Any())
+{
+    <hr />
+}
 
 @if (!String.IsNullOrWhiteSpace(Error))
 {
@@ -19,7 +26,7 @@
 
 @if (SecretFound)
 {
-    <div class="success banner">You found the secret!</div>
+    <div class="success banner">You found the secret! <button class="btn btn-link" @onclick="Reset">Play again</button></div>
 }
 
 @* Secret: <input type="text" name="secretInput" value="@secret.Print()" />
@@ -32,29 +39,51 @@
         @foreach (var colour in g.Guess)
         {
             var col = colour.ToString().ToLower();
-            <div class="square @col"></div>
+            <div class="square mr-1 @col"></div>
         }
-        <div class="result">@g.Result</div>
+        <div class="result">
+            @for (int i = 0; i < g.WellPlaced; i++)
+            {
+                <div class="square mr-1 black"></div>
+            }
+            @for (int i = 0; i < g.Misplaced; i++)
+            {
+                <div class="square mr-1 space"></div>
+            }
+        </div>
     </li>
 }
 </ol>
 
-Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
-<button class="btn btn-secondary" @onclick="Backspace">Del</button>
-<button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
-
-
 <hr />
+
+<p>
+    Guess:
+    @foreach (var colour in GuessInput)
+    {
+        var col = MapToColour(colour.ToString()).ToString().ToLower();
+        <div class="square mr-1 @col"></div>
+    }
+    @for (int i = GuessInput.Length; i < 4; i++)
+    {
+        <div class="square mr-1 space"></div>
+    }
+</p>
 
 <div>
     @foreach(Colours colour in Enum.GetValues(typeof(Colours)))
     {
         var col = colour.ToString().ToLower();
-        <div class="square-lg @col" @onclick="@(e => AddToGuess(col))">
+        <div class="square-lg mr-2 @col" @onclick="@(e => AddToGuess(col))">
             @col.ToUpper()[0]
         </div>
     }
 </div>
+
+<br />
+
+<button class="btn btn-secondary mr-2" @onclick="Backspace">Del</button>
+<button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
 
 @code {
     private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
@@ -62,12 +91,14 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
 
     public string GuessInput { get; set; } = string.Empty;
     public string Error { get; set; } = string.Empty;
-    public bool SecretFound {get;set;} = false;
+    public bool SecretFound { get; set; } = false;
     public List<SubmittedGuess> Guesses { get; set; } = new List<SubmittedGuess>();
 
     public class SubmittedGuess {
         public List<Colours> Guess { get; set; }
         public string Result { get; set; }
+        public int WellPlaced { get; set; }
+        public int Misplaced { get; set; }
     }
 
     private void AddToGuess(string colour)
@@ -81,6 +112,13 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         {
             GuessInput = GuessInput.Substring(0, GuessInput.Length - 1);
         }
+    }
+
+    private void Reset()
+    {
+        GuessInput = "";
+        Guesses.Clear();
+        SecretFound = false;
     }
 
     private void SubmitGuess()
@@ -105,7 +143,12 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         SecretFound = result.WellPlaced == 4 && result.Misplaced == 0;
         Result = result.AsString();
 
-        Guesses.Add(new SubmittedGuess { Guess = guess, Result = Result });
+        Guesses.Add(new SubmittedGuess {
+            Guess = guess,
+            Result = Result,
+            WellPlaced = result.WellPlaced,
+            Misplaced = result.Misplaced
+        });
 
         GuessInput = "";
     }
@@ -152,6 +195,9 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
         color: #009933;
         background-color: #CCFFCC;
     }
+    .success .btn-link {
+        vertical-align: baseline;
+    }
     .result {
         display: inline-block;
         border-left: 1px solid #ccc;
@@ -166,12 +212,10 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
     .square {
         width: 20px;
         height: 20px;
-        margin-right: 5px;
     }
     .square-lg {
         width: 40px;
         height: 40px;
-        margin-right: 10px;
         line-height: 40px;
         user-select: none;
         text-align: center;
@@ -185,4 +229,6 @@ Guess: <input type="text" @bind="GuessInput" @bind:event="oninput" />
     .green { background-color: #009933; }
     .blue { background-color: #0066CC; }
     .pink { background-color: #CC3399; }
+    .space { border: 1px solid #aaa; }
+    .black { background-color: #000; }
 </style>
