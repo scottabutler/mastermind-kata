@@ -32,19 +32,19 @@
         text-overflow: ellipsis;
     }
 
-@media (max-width: 999.98px) {
-    .top-row:not(.auth)[b-6htkwvyh64] {
+/* @media (max-width: 999.98px) {
+    .top-row:not(.auth) {
         display: none;
     }
 
-    .top-row.auth[b-6htkwvyh64] {
+    .top-row.auth {
         justify-content: space-between;
     }
 
-    .top-row a[b-6htkwvyh64], .top-row .btn-link[b-6htkwvyh64] {
+    .top-row a, .top-row .btn-link {
         margin-left: 0;
     }
-}
+} */
 
 @media (min-width: 1000px) {
     .page[b-6htkwvyh64] {
