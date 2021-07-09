@@ -35,18 +35,22 @@
     @if (!String.IsNullOrWhiteSpace(Error))
     {
         <div class="row">
-            <div class="col-6 error banner">@Error</div>
+            <div class="col-md-6 mt-2">
+                <div class="error banner">@Error</div>
+            </div>
         </div>
     }
 
     @if (SecretFound)
     {
         <div class="row">
-            <div class="col-6 success banner">
-                You found the secret!
-                <button class="btn btn-link" @onclick="Reset">
-                    Play again
-                </button>
+            <div class="col-md-6 mt-2">
+                <div class="success banner">
+                    You found the secret!
+                    <button class="btn btn-link" @onclick="Reset">
+                        Play again
+                    </button>
+                </div>
             </div>
         </div>
     }
