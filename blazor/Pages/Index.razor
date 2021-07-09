@@ -1,91 +1,125 @@
 ﻿@page "/"
 @using Mastermind.Core;
 
-<h1>Welcome</h1>
-<p>
-    Guess the secret colour combination that is made up of Blue, Green, Red, Orange, Yellow and Pink.
-    <br />There are 4 coloured squares in the secret and colours may appear more than once.
-</p>
-<p>
-    <div class="square mr-2 black"></div>A square of your guess is in the correct place.
-    <br />
-    <div class="square mr-2 space"></div>A square of your guess is the right colour but in the wrong place.
-</p>
-<p>
-    Enter a guess using the coloured buttons below.
-</p>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>
+                Mastermind
+            </h1>
+        </div>
+    </div>
 
-@if (Guesses.Any())
-{
+    <div class="row">
+        <div class="col">
+            <p>
+                Guess the secret colour combination that is made up of Blue, Green, Red, Orange, Yellow and Pink.
+                <br />There are 4 coloured squares in the secret and colours may appear more than once.
+            </p>
+            <p>
+                <div class="square mr-2 black"></div>A square of your guess is in the correct place.
+                <br />
+                <div class="square mr-2 space"></div>A square of your guess is the right colour but in the wrong place.
+            </p>
+            <p class="mb-0">
+                Enter a guess using the coloured buttons below.
+            </p>
+        </div>
+    </div>
+
+    @if (Guesses.Any())
+    {
+        <hr />
+    }
+
+    @if (!String.IsNullOrWhiteSpace(Error))
+    {
+        <div class="row">
+            <div class="col-6 error banner">@Error</div>
+        </div>
+    }
+
+    @if (SecretFound)
+    {
+        <div class="row">
+            <div class="col-6 success banner">
+                You found the secret!
+                <button class="btn btn-link" @onclick="Reset">
+                    Play again
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col">
+            <ol class="mb-0">
+            @foreach (var g in Guesses)
+            {
+                <li class="ml-3">
+                    @foreach (var colour in g.Guess)
+                    {
+                        var col = colour.ToString().ToLower();
+                        <div class="square mr-1 @col"></div>
+                    }
+                    <div class="result">
+                        @for (int i = 0; i < g.WellPlaced; i++)
+                        {
+                            <div class="square mr-1 black"></div>
+                        }
+                        @for (int i = 0; i < g.Misplaced; i++)
+                        {
+                            <div class="square mr-1 space"></div>
+                        }
+                        &nbsp;
+                    </div>
+                </li>
+            }
+            </ol>
+        </div>
+    </div>
+
     <hr />
-}
 
-@if (!String.IsNullOrWhiteSpace(Error))
-{
-    <div class="error banner">@Error</div>
-}
-
-@if (SecretFound)
-{
-    <div class="success banner">You found the secret! <button class="btn btn-link" @onclick="Reset">Play again</button></div>
-}
-
-@* Secret: <input type="text" name="secretInput" value="@secret.Print()" />
-<br /><br /> *@
-
-<ol>
-@foreach (var g in Guesses)
-{
-    <li class="ml-3">
-        @foreach (var colour in g.Guess)
-        {
-            var col = colour.ToString().ToLower();
-            <div class="square mr-1 @col"></div>
-        }
-        <div class="result">
-            @for (int i = 0; i < g.WellPlaced; i++)
-            {
-                <div class="square mr-1 black"></div>
-            }
-            @for (int i = 0; i < g.Misplaced; i++)
-            {
-                <div class="square mr-1 space"></div>
-            }
-            &nbsp;
+    <div class="row">
+        <div class="col">
+            <p>
+                Guess:
+                @foreach (var colour in GuessInput)
+                {
+                    var col = MapToColour(colour.ToString()).ToString().ToLower();
+                    <div class="square mr-1 @col"></div>
+                }
+                @for (int i = GuessInput.Length; i < 4; i++)
+                {
+                    <div class="square mr-1 space"></div>
+                }
+            </p>
         </div>
-    </li>
-}
-</ol>
+    </div>
 
-<hr />
-
-<p>
-    Guess:
-    @foreach (var colour in GuessInput)
-    {
-        var col = MapToColour(colour.ToString()).ToString().ToLower();
-        <div class="square mr-1 @col"></div>
-    }
-    @for (int i = GuessInput.Length; i < 4; i++)
-    {
-        <div class="square mr-1 space"></div>
-    }
-</p>
-
-<div>
-    @foreach(Colours colour in Enum.GetValues(typeof(Colours)))
-    {
-        var col = colour.ToString().ToLower();
-        <div class="square-lg mr-2 @col" @onclick="@(e => AddToGuess(col))">
-            @col.ToUpper()[0]
+    <div class="row">
+        <div class="col">
+            <div>
+                @foreach(Colours colour in Enum.GetValues(typeof(Colours)))
+                {
+                    var col = colour.ToString().ToLower();
+                    <div class="square-lg mr-2 mb-2 @col" @onclick="@(e => AddToGuess(col))">
+                        @col.ToUpper()[0]
+                    </div>
+                }
+            </div>
         </div>
-    }
+    </div>
+
+    <div class="row actions mt-2">
+        <div class="col">
+            <button class="btn btn-secondary mr-2 mb-2" @onclick="Backspace">Delete</button>
+            <button class="btn btn-primary mb-2" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
+        </div>
+    </div>
+
 </div>
-
-<br />
-
-<button class="btn btn-secondary mr-2" @onclick="Backspace">Delete</button>
-<button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
 
 <br />
 <br />
@@ -238,4 +272,14 @@
     .pink { background-color: #CC3399; }
     .space { border: 1px solid #aaa; }
     .black { background-color: #000; }
+
+    body {
+        color: #444;
+    }
+    .container {
+        background-color: #fff;
+    }
+    .actions .btn {
+        width: 134px;
+    }
 </style>
