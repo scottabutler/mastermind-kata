@@ -160,11 +160,11 @@ namespace Mastermind.Core
     public enum Colours
     {
         Red,
-        Pink,
         Orange,
         Yellow,
         Green,
-        Blue
+        Blue,
+        Pink
     }
 
     public struct GuessResult

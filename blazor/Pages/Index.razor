@@ -7,8 +7,9 @@
     <br />There are 4 coloured squares in the secret and colours may appear more than once.
 </p>
 <p>
-    Each black square indicates a well placed square in the guess.
-    <br />Each white square indicates a misplaced square in the guess.
+    <div class="square mr-2 black"></div>A square of your guess is in the correct place.
+    <br />
+    <div class="square mr-2 space"></div>A square of your guess is the right colour but in the wrong place.
 </p>
 <p>
     Enter a guess using the coloured buttons below.
@@ -35,7 +36,7 @@
 <ol>
 @foreach (var g in Guesses)
 {
-    <li>
+    <li class="ml-3">
         @foreach (var colour in g.Guess)
         {
             var col = colour.ToString().ToLower();
@@ -83,8 +84,12 @@
 
 <br />
 
-<button class="btn btn-secondary mr-2" @onclick="Backspace">Del</button>
+<button class="btn btn-secondary mr-2" @onclick="Backspace">Delete</button>
 <button class="btn btn-primary" @onclick="SubmitGuess" disabled="@(SecretFound || GuessInput.Length != 4)">Submit</button>
+
+<br />
+<br />
+<br />
 
 @code {
     private List<Colours> secret = Mastermind.Core.App.GenerateSecret();
@@ -120,6 +125,7 @@
         GuessInput = "";
         Guesses.Clear();
         SecretFound = false;
+        secret = Mastermind.Core.App.GenerateSecret();
     }
 
     private void SubmitGuess()
