@@ -147,7 +147,10 @@
 
     private void AddToGuess(string colour)
     {
-        GuessInput += colour.ToLower()[0];
+        if (GuessInput.Length < 4)
+        {
+            GuessInput += colour.ToLower()[0];
+        }
     }
 
     private void Backspace()
