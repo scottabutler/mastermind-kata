@@ -1,3 +1,87 @@
+/* /Pages/Index.razor.rz.scp.css */
+li[b-ot6cxxv7pt] {
+    margin-bottom: 5px;
+}
+.banner[b-ot6cxxv7pt] {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-width: 600px;
+}
+.error[b-ot6cxxv7pt] {
+    border: 1px solid red;
+    color: red;
+    background-color: #ffd6d6;
+}
+.success[b-ot6cxxv7pt] {
+    border: 1px solid #009933;
+    color: #009933;
+    background-color: #ccffcc;
+}
+.success .btn-link[b-ot6cxxv7pt] {
+    vertical-align: baseline;
+}
+.result[b-ot6cxxv7pt] {
+    display: inline-block;
+    border-left: 1px solid #ccc;
+    padding-left: 10px;
+    margin-left: 10px;
+}
+.square[b-ot6cxxv7pt],
+.square-lg[b-ot6cxxv7pt] {
+    border-radius: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.square[b-ot6cxxv7pt] {
+    width: 20px;
+    height: 20px;
+}
+.square-lg[b-ot6cxxv7pt] {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    user-select: none;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+    cursor: pointer;
+}
+.red[b-ot6cxxv7pt] {
+    background-color: #cc0000;
+}
+.orange[b-ot6cxxv7pt] {
+    background-color: #ff6600;
+}
+.yellow[b-ot6cxxv7pt] {
+    background-color: #ffc300;
+    color: black;
+}
+.green[b-ot6cxxv7pt] {
+    background-color: #009933;
+}
+.blue[b-ot6cxxv7pt] {
+    background-color: #0066cc;
+}
+.pink[b-ot6cxxv7pt] {
+    background-color: #cc3399;
+}
+.space[b-ot6cxxv7pt] {
+    border: 1px solid #aaa;
+}
+.black[b-ot6cxxv7pt] {
+    background-color: #000;
+}
+
+body[b-ot6cxxv7pt] {
+    color: #444;
+}
+.container[b-ot6cxxv7pt] {
+    background-color: #fff;
+}
+.actions .btn[b-ot6cxxv7pt] {
+    width: 134px;
+}
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-6htkwvyh64] {
     position: relative;
